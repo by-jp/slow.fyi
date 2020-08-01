@@ -5,17 +5,20 @@ const {
   CLOUDFLARE_TOKEN,
   CLOUDFLARE_DNS_ZONE_ID,
   CLOUDFLARE_DNS_IDENTIFIER,
+
+  GITHUB_RUN_ID,
 } = process.env
 
-const buildURL = 'dev'
+const buildURL = `https://www.github.com/jphastings/slow.fyi/actions/runs/${GITHUB_RUN_ID}`
 
+const path = require('path')
 const pinata = require('@pinata/sdk')(PINATA_API_KEY, PINATA_API_SECRET)
 const cloudflare = require('cloudflare')({ token: CLOUDFLARE_TOKEN })
 
 build().then(pinataPin).then(cloudflareUpdate).catch(console.error)
 
 async function build() {
-  return 'public/'
+  return path.join(__dirname, '..', '..', 'public')
 }
 
 async function pinataPin(rootPath) {
