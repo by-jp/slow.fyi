@@ -13,7 +13,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: cd .github/deploy && npm install --quiet && node --no-warnings deploy.js
+      - run: cd .github/deploy && npm install --silent && node --no-warnings deploy.js
         env:
           PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}
           PINATA_API_SECRET: ${{ secrets.PINATA_API_SECRET }}
