@@ -10,28 +10,44 @@ const {
 } = process.env
 
 const buildURL = `https://www.github.com/jphastings/slow.fyi/actions/runs/${GITHUB_RUN_ID}`
+const pinataPinName = 'slow.fyi'
 
 const path = require('path')
 const pinata = require('@pinata/sdk')(PINATA_API_KEY, PINATA_API_SECRET)
 const cloudflare = require('cloudflare')({ token: CLOUDFLARE_TOKEN })
 
-build().then(pinataPin).then(cloudflareUpdate).catch(console.error)
+build().then(pinataPin).then(cloudflareUpdate).then(pinataUnpinPrevious).catch(console.error)
 
 async function build() {
   return path.join(__dirname, '..', '..', 'public')
 }
 
 async function pinataPin(rootPath) {
+  console.log(`Pinning new version:`)
   const response = await pinata.pinFromFS(rootPath, {
     pinataMetadata: {
-      name: 'slow.fyi',
+      name: pinataPinName,
       keyvalues: { buildURL }
     },
     pinataOptions: {
       cidVerson: 1,
       wrapWithDirectory: false,
+      customPinPolicy: {
+        regions: [
+          {
+            id: 'FRA1',
+            desiredReplicationCount: 1
+          },
+          {
+            id: 'NYC1',
+            desiredReplicationCount: 2
+          }
+        ]
+      }
     }
   })
+
+  console.log(`  ✅ ${response.IpfsHash}`)
 
   return response.IpfsHash
 }
@@ -56,4 +72,29 @@ async function cloudflareUpdate(rootHash) {
   if (!response.success) {
     throw new Error("Failed to update Cloudflare: " + response.errors)
   }
+
+  return rootHash
+}
+
+async function pinataUnpinPrevious(rootHash) {
+  console.log("Finding old versions to unpin:")
+  const response = await pinata.pinList({
+    metadata: { name: pinataPinName }
+  })
+
+  const deletes = []
+
+  response.rows.forEach((pin) => {
+    if (pin.ipfs_pin_hash == rootHash) {
+      return
+    }
+
+    deletes.push(
+      pinata.unpin(pin.ipfs_pin_hash)
+        .then(() => console.log(`  👍 Unpinned ${pin.ipfs_pin_hash}`))
+        .catch(() => console.log(`  👍 Already unpinned ${pin.ipfs_pin_hash}`))
+    )
+  })
+
+  return Promise.all(deletes)
 }
