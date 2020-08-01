@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'OpenSans-Light';
+  src: url('osl.woff') format('woff');
+}
+
+body {
+  font-family:'OpenSans-Light';
+  font-weight: lighter;
+}
+
+div {
+  max-width: 500px;
+  width: 85%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -5,13 +5,13 @@ A simple website to help in communicating the _lack_ of urgency in a digital mes
 Much like [email debt forgiveness day](https://gimletmedia.com/shows/reply-all/posts/edfd), the simple website at [slow.fyi](https://slow.fyi) aims to make communicating online a little less stressful.
 
 > ## Take _your_ time
-> 
+>
 > The internet lets us communicate extremely fast, and with that has grown the expectation of a fast response.
-> 
+>
 > In today's stressful world, friends may want to reach out to friends without making them feel like they owe a fast reply.
-> 
+>
 > Ending any message with "[slow.fyi](https://slow.fyi)" does just that, because it brings them here<sup>1</sup>, where they can read this message and know a reply is appreciated, not expected.
-> 
+>
 > Enjoy the internet a little slower today.<br/>
 > [slow.fyi](https://slow.fyi)
 
