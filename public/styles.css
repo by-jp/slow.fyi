@@ -18,7 +18,20 @@ div {
   max-width: 500px;
 }
 
-img {
+svg {
   margin-top: 25px;
   width: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  svg path { fill: #ddd; }
+
+  body {
+    color: #ddd;
+    background-color: black;
+  }
+
+  a {
+    color: #66d;
+  }
 }
