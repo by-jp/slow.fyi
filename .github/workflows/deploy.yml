@@ -1,22 +1,26 @@
-name: Deploy to slow.fyi
-on:
-  push:
-    branches:
-      - master
+name: Ship to IPFS
+on: [push]
 
 jobs:
-  tag:
+  Deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - run: cd .github/deploy && npm install --silent && node --no-warnings deploy.js
-        env:
-          PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}
-          PINATA_API_SECRET: ${{ secrets.PINATA_API_SECRET }}
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          CLOUDFLARE_DNS_ZONE_ID: ${{ secrets.CLOUDFLARE_DNS_ZONE_ID }}
-          CLOUDFLARE_DNS_IDENTIFIER: ${{ secrets.CLOUDFLARE_DNS_IDENTIFIER }}
+    - name: Check out repository code
+      uses: actions/checkout@v3
+    - name: Publish to IPFS
+      id: Publish
+      uses: aquiladev/ipfs-action@master
+      with:
+        path: ./site
+        service: filebase
+        pinName: ${{ github.event.repository.name }}
+        filebaseBucket: microsites
+        filebaseKey: ${{ secrets.FILEBASE_KEY }}
+        filebaseSecret: ${{ secrets.FILEBASE_SECRET }}
+    - name: Update DNS record
+      uses: XueMoMo/actions-coudflare-dns@v1.0.1
+      with:
+        name: ${{ github.event.repository.name }}
+        cid: ${{ steps.Publish.outputs.cid }}
+        token: ${{ secrets.CLOUDFLARE_TOKEN }}
+        zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
