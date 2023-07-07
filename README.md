@@ -19,7 +19,7 @@ Much like [email debt forgiveness day](https://gimletmedia.com/shows/reply-all/p
 
 ## Build & deploy
 
-This static website is hosted with [IPFS](https://ipfs.io), pinned by [pinata.cloud](https://pinata.cloud), and fronted by [Cloudflare](https://www.cloudflare-ipfs.com). IPFS is a distributed network, so anyone can help to host by running:
+This static website is hosted with [IPFS](https://ipfs.io), pinned by [Filebase](https://filebase.com), and fronted by [Cloudflare](https://www.cloudflare-ipfs.com). IPFS is a distributed network, so anyone can help to host by running:
 
 ```
 $ ipfs pin add /ipns/www.slow.fyi
@@ -28,7 +28,7 @@ $ ipfs pin add /ipns/www.slow.fyi
 A merge to the master branch of this repo will trigger a Github Action that will:
 
 1. Compile the site
-2. Add the resulting files to a temporary IPFS instance
-3. Pin the resulting IPFS multihash to pinata.cloud
-4. Update Cloudflare's DNS entry to point to the new hash
+2. Pin the resulting IPFS multihash to filebase.com
+3. Update Cloudflare's DNS entry to point to the new hash
 
+_Please note, the site is hosted at www.slow.fyi, rather than slow.fyi, so that I can use `CNAME` records to point to Cloudflare's IPFS gateway and have other DNS records._
